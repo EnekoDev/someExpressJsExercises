@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "title": "Finish project proposal",
+        "completed": false
+    },
+    {
+        "id": 2,
+        "title": "Buy groceries",
+        "completed": true
+    },
+    {
+        "id": 3,
+        "title": "Schedule dentist appointment",
+        "completed": false
+    },
+    {
+        "id": 4,
+        "title": "Respond to pending emails",
+        "completed": true
+    },
+    {
+        "id": 5,
+        "title": "Clean the workspace",
+        "completed": false
+    }
+]
