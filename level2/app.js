@@ -3,11 +3,15 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use((req, res, next) => {
     const key = req.query.apiKey;
     if (!key || key !== "12345") {
         return res.status(403).json({
-            Error: "Unauthorized"
+            Error: "Forbiden"
         });
     }
     req.requestTime = Date.now();
