@@ -28,9 +28,9 @@ async function writeJson(file, data) {
 router.get("/todos", async (req, res) => {
     try {
         const data = await readJson(FILE);
-        res.status(200).json(data);
+        return res.status(200).json(data);
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             error:err.message
         });
     }
@@ -40,10 +40,9 @@ router.get("/todos/:id", async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
-            res.status(400).json({
+            return res.status(400).json({
                 error:"ID is required"
             });
-            return;
         }
         const numId = Number(id);
         if (!Number.isInteger(numId) || numId < 1) {
@@ -52,16 +51,15 @@ router.get("/todos/:id", async (req, res) => {
             });
         }
         const data = await readJson(FILE);
-        const todo = data.find(item => item.id === Number(id));
+        const todo = data.find(item => item.id === numId);
         if (!todo) {
-            res.status(404).json({
+            return res.status(404).json({
                 error: "Element not found"
             });
-            return;
         }
-        res.json(todo);
+        return res.status(200).json(todo);
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             error:err.message
         });
     }
@@ -71,24 +69,69 @@ router.post("/todos", async (req, res) => {
     try {
         const { title, completed } = req.body;
         if (!title) {
-            res.status(400).json({
+            return res.status(400).json({
                 error:"Title is required"
             });
         }
-        if (!completed) {
-            res.status(400).json({
+        if (completed === undefined) {
+            return res.status(400).json({
                 error:"Completed is required"
             });
         }
 
-        
-
-        res.json(data);
+        const data = readJson(FILE);
+        const id = data.length + 1;
+        data.push({id:id, title:title, completed:completed});
+        writeJson(FILE, data);
+        return res.status(200).json({
+            success:"Element created"
+        });
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             error:err.message
         });
     }
+});
+
+router.put("/todos/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const numId = Number(id);
+        if (!Number.isInteger(numId) || numId < 1) {
+            return res.status(400).json({
+                error: "Only positive numbers can be used"
+            });
+        }
+
+        const { title, completed } = req.body;
+
+        const data = readJson(FILE);
+        const todo = data.find(item => item.id === numId);
+        if (!todo) {
+            return res.status(404).json({
+                error:"Element not found"
+            });
+        }
+        if (title !== undefined) {
+            todo.title = title;
+        }
+        if (completed !== undefined) {
+            todo.completed = completed;
+        }
+        writeJson(FILE, data);
+        return res.status(200).json({
+            success:"Element updated",
+            element:todo
+        });
+    } catch (err) {
+        return res.status(500).json({
+            error:err.message
+        });
+    }
+});
+
+router.delete("/todos/:id", async (req, res) => {
+    
 });
 
 module.exports = router;
