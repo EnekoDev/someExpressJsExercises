@@ -1,5 +1,7 @@
 import express from "express";
 import { connect } from "./connection.js";
+import { crud } from "userCrud.js";
+
 const app = express();
 const port = 3000;
 
