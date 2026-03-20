@@ -1,8 +1,8 @@
-import { router } from './todos.js';
 import express from 'express'
+import { router } from './todos.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

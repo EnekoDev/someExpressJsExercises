@@ -1,12 +1,13 @@
 import express from "express";
-import { connect } from "./connection.js";
-import { response } from "./responses.js";
+import { connect } from "../libs/connection.js";
+import { response } from "../libs/responses.js";
+import { authMiddleware } from "../middleware/auth.js";
 
 const con = await connect();
 const db = con.collection("user");
 const usersRouter = express.Router();
 
-usersRouter.get("/users", async (req, res) => {
+usersRouter.get("/users", authMiddleware, async (req, res) => {
     try {
         const users = await db.find().toArray();
         return response.success(res, users);

@@ -1,10 +1,11 @@
 import express from "express";
-import { connect } from "./connection.js";
-import { usersRouter } from "./usersCrud.js";
+import { connect } from "./libs/connection.js";
+import { usersRouter } from "./routes/usersCrud.js";
+import { response } from "./libs/responses.js";
 
 const app = express();
-const port = 3000;
-const db = await connect();
+const port = process.env.PORT;
+async () => await connect();
 
 app.use(express.urlencoded({ extended:false }));
 app.use(express.json());
@@ -12,13 +13,9 @@ app.use(usersRouter);
 
 app.get("/", async (req, res) => {
     try {
-        return res.status(200).json({
-            status:"running"
-        });
+        return response.success(res, "Running");
     } catch (err) {
-        return res.status(500).json({
-            error: err.message
-        });
+        return response.serverError(res, err);
     }
 });
 
